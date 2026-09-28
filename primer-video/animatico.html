@@ -1,0 +1,444 @@
+<title>Animático Tierra Alta</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    color-scheme: dark;
+    --ink:#0a0a0b;
+    --deep:#101012;
+    --panel:#16161a;
+    --line:#26262c;
+    --line-soft:#1d1d22;
+    --bone:#e9e5dd;
+    --dim:#8b867c;
+    --dimmer:#5d594f;
+    --wheat:#c9a24b;
+    --cold:#7d95ab;
+    --sodio:#d06f39;
+    --display:"Bodoni Moda",Georgia,"Times New Roman",serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--bone);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:20px;padding-block:32px 64px}
+
+  /* ---------- encabezado ---------- */
+  .head{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px 28px;margin-bottom:22px}
+  .head h1{
+    font-family:var(--display);font-weight:700;font-size:clamp(30px,6vw,46px);
+    letter-spacing:.14em;margin:0;text-wrap:balance;line-height:1.05;
+  }
+  .head .sub{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+  .warn{
+    margin:0 0 26px;padding:11px 14px;border:1px solid var(--line);border-left:2px solid var(--sodio);
+    background:var(--deep);font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--dim);
+  }
+  .warn b{color:var(--bone);font-weight:500}
+
+  /* ---------- pantalla ---------- */
+  .screen{
+    position:relative;width:100%;aspect-ratio:2.39/1;max-width:100%;
+    background:#000;border:1px solid var(--line);overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .frame{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+    padding:clamp(18px,4.4vw,44px);gap:10px;transition:opacity .16s linear}
+  .tag{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dimmer)}
+  .tag b{font-weight:600}
+  .slug{
+    font-family:var(--display);font-weight:400;
+    font-size:clamp(20px,4.6vw,38px);line-height:1.12;letter-spacing:.01em;
+    text-wrap:balance;margin:0;
+  }
+  .act{font-size:clamp(12px,2.3vw,14.5px);color:var(--dim);max-width:62ch;margin:0;line-height:1.55}
+  .lens{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;color:var(--dimmer);text-transform:uppercase}
+
+  /* rótulo en pantalla, abajo a la izquierda como en el guion */
+  .rotulo{
+    position:absolute;left:clamp(18px,4.4vw,44px);bottom:clamp(16px,3.6vw,34px);
+    font-family:var(--mono);font-size:clamp(9.5px,1.5vw,12.5px);line-height:1.5;
+    color:rgba(255,255,255,.7);letter-spacing:.09em;white-space:pre;pointer-events:none;
+  }
+  /* placas */
+  .card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:#000;gap:clamp(10px,2.4vw,22px);text-align:center;padding:16px}
+  .card .big{font-family:var(--display);font-weight:700;letter-spacing:.42em;
+    font-size:clamp(17px,4.4vw,38px);margin:0}
+  .card .sm{font-family:var(--mono);font-size:clamp(9.5px,1.7vw,14px);letter-spacing:.2em;color:rgba(233,229,221,.8);margin:0}
+  .card .xs{font-family:var(--mono);font-size:clamp(9px,1.5vw,12px);letter-spacing:.24em;color:rgba(233,229,221,.55);margin:0}
+  /* silencio */
+  .sil{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
+  .sil span{font-family:var(--mono);font-size:clamp(9.5px,1.6vw,12px);letter-spacing:.34em;color:#4a4740;text-transform:uppercase}
+
+  /* ---------- transporte ---------- */
+  .bar{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+  button{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    background:var(--panel);color:var(--bone);border:1px solid var(--line);padding:9px 16px;cursor:pointer;
+    transition:border-color .15s,background .15s}
+  button:hover{border-color:var(--dim);background:#1c1c21}
+  button:focus-visible{outline:2px solid var(--wheat);outline-offset:2px}
+  .tc{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;letter-spacing:.06em;color:var(--dim)}
+  .tc b{color:var(--bone);font-weight:500}
+
+  .track{position:relative;margin-top:14px;height:34px;cursor:pointer;background:var(--deep);
+    border:1px solid var(--line-soft);display:flex;overflow:hidden}
+  .seg{position:relative;height:100%;border-right:1px solid var(--ink);opacity:.5;transition:opacity .15s}
+  .seg[data-on="1"]{opacity:1}
+  .seg .cap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:#000;font-weight:600}
+  .play{position:absolute;top:0;bottom:0;width:1px;background:var(--bone);pointer-events:none}
+
+  /* ---------- capas de audio ---------- */
+  .layers{margin-top:18px;border:1px solid var(--line-soft);background:var(--deep)}
+  .lrow{display:grid;grid-template-columns:124px 1fr;align-items:center;gap:12px;
+    padding:7px 12px;border-bottom:1px solid var(--line-soft)}
+  .lrow:last-child{border-bottom:0}
+  .lname{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer)}
+  .lbar{position:relative;height:6px;background:#1b1b20}
+  .lbar i{position:absolute;top:0;bottom:0;background:var(--dimmer);opacity:.45}
+  .lrow[data-on="1"] .lname{color:var(--bone)}
+  .lrow[data-on="1"] .lbar i{opacity:1}
+  .lcue{grid-column:1/-1;font-size:12px;color:var(--dim);padding-left:0}
+
+  /* ---------- lista de planos ---------- */
+  h2{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--dim);margin:38px 0 12px;font-weight:500}
+  .list{border:1px solid var(--line-soft)}
+  .row{display:grid;grid-template-columns:56px 60px 1fr 78px;gap:12px;align-items:baseline;
+    padding:10px 12px;border-bottom:1px solid var(--line-soft);cursor:pointer;
+    font-size:13.5px;transition:background .12s}
+  .row:last-child{border-bottom:0}
+  .row:hover{background:#15151a}
+  .row[data-cur="1"]{background:#191921}
+  .row .id{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--dimmer)}
+  .row[data-cur="1"] .id{color:var(--bone)}
+  .row .tcx{font-family:var(--mono);font-size:11.5px;font-variant-numeric:tabular-nums;color:var(--dimmer)}
+  .row .nm{color:var(--bone)}
+  .row .dur{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums;color:var(--dimmer);text-align:right}
+  .row .swatch{display:inline-block;width:6px;height:6px;margin-right:8px;vertical-align:1px}
+
+  .note{margin-top:34px;padding-top:22px;border-top:1px solid var(--line-soft);
+    font-size:13.5px;color:var(--dim);max-width:66ch}
+  .note b{color:var(--bone);font-weight:500}
+  .note p{margin:0 0 12px}
+  .note p:last-child{margin:0}
+
+  @media (max-width:560px){
+    .row{grid-template-columns:48px 1fr 60px}
+    .row .tcx{display:none}
+    .lrow{grid-template-columns:96px 1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+
+  <div class="head">
+    <h1>TIERRA ALTA</h1>
+    <div class="sub">Animático · Video nº 1 · Apertura · 1:39</div>
+  </div>
+
+  <p class="warn">
+    <b>Esto no es el video: es el animático.</b> Los 14 planos todavía no están generados.
+    Lo que se reproduce acá son los tiempos reales de montaje, los rótulos y las capas de audio,
+    para verificar el ritmo antes de gastar una sola generación. Dale play y no leas: <b>mirá cuánto dura cada cosa.</b>
+  </p>
+
+  <div class="screen" id="screen">
+    <div class="frame" id="frame">
+      <div class="tag" id="ftag"></div>
+      <p class="slug" id="fslug"></p>
+      <p class="act" id="fact"></p>
+      <div class="lens" id="flens"></div>
+    </div>
+    <div class="rotulo" id="rotulo" hidden></div>
+    <div class="card" id="card" hidden></div>
+    <div class="sil" id="sil" hidden><span>silencio</span></div>
+  </div>
+
+  <div class="bar">
+    <button id="btnPlay">Reproducir</button>
+    <button id="btnBack">Reiniciar</button>
+    <div class="tc"><b id="tcNow">0:00.0</b> / 1:39.0</div>
+    <div class="tc" id="tcBlock"></div>
+  </div>
+
+  <div class="track" id="track"><div class="play" id="playhead" style="left:0"></div></div>
+
+  <div class="layers" id="layers"></div>
+
+  <h2>Los 14 planos</h2>
+  <div class="list" id="list"></div>
+
+  <div class="note">
+    <p><b>Lo que hay que mirar en este animático, en este orden.</b></p>
+    <p><b>1. Los dos segundos de silencio en 0:12.</b> Se van los pájaros y se corta todo el sonido.
+      Es el primer momento en que el espectador se incomoda, y no sabe por qué.</p>
+    <p><b>2. La caída de ritmo del bloque B.</b> 7-5-5-5-5. Cada plano es más corto que el anterior
+      sin que se note. Si al llegar a 1:15 sentís apuro, está bien hecho.</p>
+    <p><b>3. Los siete segundos del último plano.</b> Duran tres segundos más de lo cómodo, a propósito.
+      Son los tres segundos en los que el espectador encuentra el punto de luz en el espejo.
+      Si lo acortás, no lo ve. Si lo alargás, se lo explicás.</p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var WHEAT="#c9a24b", COLD="#7d95ab", SODIO="#d06f39", BONE="#e9e5dd";
+
+  // t = inicio en segundos, d = duración. Espejo exacto de primer-video/02-montaje.md
+  var SHOTS=[
+    {id:"T01",t:0, d:8, b:"A", nm:"Campo de trigo al amanecer",
+     slug:"Un mar de trigo maduro moviéndose despacio.",
+     act:"Plano fijo. El sol sale por la izquierda. Es hermoso y es completamente común. No pasa nada, y eso es lo que tiene que pasar.",
+     lens:"40 mm · trípode · sin movimiento"},
+    {id:"T02",t:8, d:6, b:"A", nm:"Los pájaros se van",
+     slug:"Cuarenta pájaros levantan vuelo al mismo tiempo.",
+     act:"Nadie los asusta. Se van todos juntos, hacia el oeste, y el alambre queda vibrando y vacío. Después el sonido se corta.",
+     lens:"28 mm · contrapicado · trípode"},
+    {id:"T03",t:14,d:8, b:"A", nm:"La perra mira hacia el este",
+     slug:"Pampa, sentada en la vereda, mirando algo que no está.",
+     act:"Las orejas tiesas. Gruñe bajo sin moverse. La calle vacía se va hasta un horizonte plano. No hay nada que ver.",
+     lens:"50 mm · altura de perro · f/2.8"},
+    {id:"T04",t:22,d:6, b:"A", nm:"El mapa en la televisión",
+     slug:"Dos líneas punteadas. Dos puntos rojos.",
+     act:"Un gráfico de noticiero berreta en un tubo de rayos catódicos. Uno de los puntos cae en el Pacífico. El otro, frente a Buenos Aires.",
+     lens:"85 mm · macro de pantalla · scanlines"},
+    {id:"T05",t:28,d:8, b:"A", nm:"Camila entiende",
+     slug:"Una mujer se sienta sin mirar la silla.",
+     act:"Tiene las llaves del auto todavía en la mano, a mitad de camino. No llora, no se tapa la boca. No parpadea en ocho segundos.",
+     lens:"85 mm · f/2.0 · sólo los ojos en foco"},
+    {id:"T06",t:36,d:8, b:"A", nm:"La bandeja de agua",
+     slug:"El agua salta el borde y voltea los bloques de madera.",
+     act:"Levanta una punta quince centímetros y la suelta. Es toda la ciencia de la serie explicada sin una palabra. Fundido a negro de 12 fotogramas.",
+     lens:"50 mm · lateral a la altura de la mesada"},
+    {id:"TIT",t:44,d:4, b:"T", nm:"Placa de título", card:"title",
+     slug:"TIERRA ALTA", act:"", lens:""},
+    {id:"T07",t:48,d:7, b:"B", nm:"El mapa de papel",
+     slug:"Un dedo cruza la Argentina de este a oeste.",
+     act:"Mapa de rutas YPF del 2003, remendado con cinta, sobre el capó de un Torino. El dedo se detiene en la cordillera y golpea dos veces.",
+     lens:"35 mm · picado total · lámpara colgante"},
+    {id:"T08",t:55,d:5, b:"B", nm:"El cajero sin billetes",
+     slug:"SIN EXISTENCIA DE BILLETES.",
+     act:"Una mano aprieta el teclado dos veces, fuerte. El mensaje no cambia. Detrás, en el reflejo, catorce personas que no hablan.",
+     lens:"85 mm · macro de pantalla · reflejos"},
+    {id:"T09",t:60,d:5, b:"B", nm:"La góndola vacía",
+     slug:"Estanterías de metal pelado y harina en el piso.",
+     act:"La cámara pasa de largo, despacio. Un carrito torcido en el pasillo. Los carteles de precio escritos a mano siguen colgados de las repisas vacías.",
+     lens:"40 mm · travelling lateral · tubo parpadeando"},
+    {id:"T10",t:65,d:5, b:"B", nm:"La radio se queda muda",
+     slug:"La aguja salta dos veces y cae a cero.",
+     act:"Una voz chilena pide auxilio a través de la estática y se corta a mitad de palabra. Después, ruido blanco. Y nadie en ninguna frecuencia.",
+     lens:"85 mm macro · sólo el brillo verde del panel"},
+    {id:"T11",t:70,d:5, b:"B", nm:"Humo detrás de la iglesia",
+     slug:"Humo negro subiendo, iluminado de naranja desde abajo.",
+     act:"Una luz azul y roja barre la torre. No se ve el fuego, no se ve gente, no se ven bomberos. Sólo el humo y la luz que gira.",
+     lens:"40 mm · contrapicado leve · trípode"},
+    {id:"T12",t:75,d:6, b:"C", nm:"Las manos en la chapa",
+     slug:"Manos de todas las edades contra la puerta blanca.",
+     act:"El camión avanza a quince por hora y la gente golpea la chapa. Una mano se agarra del espejo y desaparece de cuadro.",
+     lens:"50 mm · en mano · acompañando al camión"},
+    {id:"T13",t:81,d:6, b:"C", nm:"El cartel de salida del pueblo",
+     slug:"TRES ARROYOS — GRACIAS POR SU VISITA.",
+     act:"La Porfiada pasa el cartel y las luces de posición se hacen chiquitas hasta la nada. El ruido de la multitud desaparece de un fotograma al otro.",
+     lens:"28 mm · trípode al borde de la ruta"},
+    {id:"T14",t:87,d:7, b:"C", nm:"El espejo retrovisor",
+     slug:"Y en el cielo del este, un punto de luz que no es la luna.",
+     act:"Adentro del reflejo: la ruta, el resplandor naranja del pueblo muy lejos, y arriba una luz blanca fría, quieta, demasiado brillante. Dura tres segundos más de lo cómodo.",
+     lens:"85 mm macro · f/2.0 · vibración del motor"},
+    {id:"FIN",t:94,d:5, b:"T", nm:"Placa final", card:"end",
+     slug:"", act:"", lens:""}
+  ];
+
+  var TOTAL=99;
+  var BLOCKCOL={A:WHEAT,B:COLD,C:SODIO,T:BONE};
+  var BLOCKNM={A:"Bloque A · el mundo normal",B:"Bloque B · la cuenta",C:"Bloque C · la salida",T:"Placa"};
+
+  var ROTULOS=[
+    {from:2, to:7,  txt:"TRES ARROYOS, BUENOS AIRES\nH − 31:40"},
+    {from:88,to:93, txt:"H − 22:00 · COTA 112 m"}
+  ];
+  var SILENCIOS=[{from:12,to:14},{from:68,to:70},{from:81,to:82.5}];
+
+  var LAYERS=[
+    {nm:"Ambiente",  col:BONE,  sp:[[0,14,"chicharras de campo"],[14,44,"ambiente de pueblo"],[48,75,"noche, perros lejanos"],[75,87,"caos lejano"],[87,99,"ruta y viento"]]},
+    {nm:"Motor",     col:SODIO, sp:[[75,94,"el diésel entra bajo las manos y crece"]]},
+    {nm:"Foley",     col:COLD,  sp:[[12,14,"alas"],[18,22,"gruñido"],[38,44,"vidrio y agua"],[48,52,"papel"],[57,60,"dos bips"],[60,70,"tubo fluorescente"],[75,81,"palmadas en la chapa"]]},
+    {nm:"Voz",       col:WHEAT, sp:[[23,28,"locutor de TV: “no hay motivo para el pánico”"],[40,43,"Camila: “Ay, no”"],[50,55,"Don Aldo: “Ruta 3 hasta Bahía”"],[65,69,"voz chilena que se corta a mitad de palabra"],[78,81,"“¡Llevame!”"]]},
+    {nm:"Infra 25 Hz",col:"#8a5a3a",sp:[[87,99,"no se oye: se siente"]]},
+    {nm:"Música",   col:"#6d6a60",sp:[[93,99,"una nota sostenida, y se corta con el negro"]]}
+  ];
+
+  var $=function(id){return document.getElementById(id)};
+  var screen=$("screen"),frame=$("frame"),ftag=$("ftag"),fslug=$("fslug"),fact=$("fact"),flens=$("flens");
+  var rotulo=$("rotulo"),card=$("card"),sil=$("sil");
+  var tcNow=$("tcNow"),tcBlock=$("tcBlock"),track=$("track"),playhead=$("playhead");
+  var btnPlay=$("btnPlay"),btnBack=$("btnBack"),layersEl=$("layers"),listEl=$("list");
+
+  var t=0,playing=false,last=null,curId=null;
+
+  function fmt(s){
+    if(s<0)s=0;
+    var m=Math.floor(s/60), r=s-m*60;
+    return m+":"+(r<10?"0":"")+r.toFixed(1);
+  }
+  function fmtShort(s){
+    var m=Math.floor(s/60), r=Math.floor(s-m*60);
+    return m+":"+(r<10?"0":"")+r;
+  }
+  function inSpan(x,a,b){return x>=a&&x<b}
+  function shotAt(x){
+    for(var i=0;i<SHOTS.length;i++){var s=SHOTS[i];if(inSpan(x,s.t,s.t+s.d))return s}
+    return SHOTS[SHOTS.length-1];
+  }
+
+  /* ---------- pista ---------- */
+  var segs=[];
+  SHOTS.forEach(function(s){
+    var d=document.createElement("div");
+    d.className="seg";
+    d.style.width=(s.d/TOTAL*100)+"%";
+    d.style.background=BLOCKCOL[s.b];
+    d.title=s.id+" · "+s.nm;
+    if(s.d>=6){var c=document.createElement("div");c.className="cap";c.textContent=s.id;d.appendChild(c)}
+    d.addEventListener("click",function(e){e.stopPropagation();seek(s.t+0.01)});
+    track.insertBefore(d,playhead);
+    segs.push({el:d,s:s});
+  });
+  track.addEventListener("click",function(e){
+    var r=track.getBoundingClientRect();
+    seek((e.clientX-r.left)/r.width*TOTAL);
+  });
+
+  /* ---------- capas ---------- */
+  var layerRows=[];
+  LAYERS.forEach(function(L){
+    var row=document.createElement("div");row.className="lrow";
+    var nm=document.createElement("div");nm.className="lname";nm.textContent=L.nm;
+    var bar=document.createElement("div");bar.className="lbar";
+    L.sp.forEach(function(sp){
+      var i=document.createElement("i");
+      i.style.left=(sp[0]/TOTAL*100)+"%";
+      i.style.width=((sp[1]-sp[0])/TOTAL*100)+"%";
+      i.style.background=L.col;
+      bar.appendChild(i);
+    });
+    var cue=document.createElement("div");cue.className="lcue";cue.hidden=true;
+    row.appendChild(nm);row.appendChild(bar);row.appendChild(cue);
+    layersEl.appendChild(row);
+    layerRows.push({el:row,cue:cue,L:L});
+  });
+
+  /* ---------- lista ---------- */
+  var rows=[];
+  SHOTS.forEach(function(s){
+    var r=document.createElement("div");r.className="row";
+    r.innerHTML='<div class="id"><span class="swatch" style="background:'+BLOCKCOL[s.b]+'"></span>'+s.id+'</div>'+
+      '<div class="tcx">'+fmtShort(s.t)+'</div>'+
+      '<div class="nm"></div>'+
+      '<div class="dur">'+s.d+' s</div>';
+    r.querySelector(".nm").textContent=s.nm;
+    r.addEventListener("click",function(){seek(s.t+0.01)});
+    listEl.appendChild(r);
+    rows.push({el:r,s:s});
+  });
+
+  /* ---------- pantalla ---------- */
+  function paintCard(kind){
+    if(kind==="title"){
+      card.innerHTML='<p class="big">TIERRA ALTA</p>';
+    }else{
+      card.innerHTML='<p class="big" style="letter-spacing:.3em">TIERRA ALTA</p>'+
+        '<p class="sm">EPISODIO 1 · “HORA CERO”</p>'+
+        '<p class="xs">PRÓXIMAMENTE</p>';
+    }
+  }
+
+  function render(){
+    var s=shotAt(t);
+
+    if(s.id!==curId){
+      curId=s.id;
+      if(s.card){
+        paintCard(s.card);
+        card.hidden=false;frame.hidden=true;
+      }else{
+        card.hidden=true;frame.hidden=false;
+        ftag.innerHTML='<b>'+s.id+'</b> &nbsp;'+BLOCKNM[s.b];
+        ftag.style.color=BLOCKCOL[s.b];
+        fslug.textContent=s.slug;
+        fact.textContent=s.act;
+        flens.textContent=s.lens;
+      }
+      rows.forEach(function(r){r.el.setAttribute("data-cur",r.s.id===s.id?"1":"0")});
+      segs.forEach(function(g){g.el.setAttribute("data-on",g.s.id===s.id?"1":"0")});
+      tcBlock.textContent=BLOCKNM[s.b];
+    }
+
+    // rótulos
+    var rr=null;
+    for(var i=0;i<ROTULOS.length;i++){if(inSpan(t,ROTULOS[i].from,ROTULOS[i].to)){rr=ROTULOS[i];break}}
+    if(rr){rotulo.hidden=false;rotulo.textContent=rr.txt}else{rotulo.hidden=true}
+
+    // silencios: la pantalla se va a negro total
+    var isSil=SILENCIOS.some(function(x){return inSpan(t,x.from,x.to)});
+    sil.hidden=!isSil;
+    frame.style.opacity=isSil?"0.13":"1";
+
+    // capas de audio activas
+    layerRows.forEach(function(L){
+      var on=null;
+      for(var i=0;i<L.L.sp.length;i++){var sp=L.L.sp[i];if(inSpan(t,sp[0],sp[1])){on=sp[2];break}}
+      if(isSil&&L.L.nm!=="Infra 25 Hz"){on=null}
+      L.el.setAttribute("data-on",on?"1":"0");
+      if(on){L.cue.hidden=false;L.cue.textContent=on}else{L.cue.hidden=true}
+    });
+
+    tcNow.textContent=fmt(t);
+    playhead.style.left=(t/TOTAL*100)+"%";
+  }
+
+  function seek(x){
+    t=Math.max(0,Math.min(TOTAL-0.05,x));
+    curId=null;
+    render();
+  }
+
+  function tick(now){
+    if(!playing)return;
+    if(last===null)last=now;
+    t+=(now-last)/1000;
+    last=now;
+    if(t>=TOTAL){t=TOTAL-0.05;stop();render();return}
+    render();
+    requestAnimationFrame(tick);
+  }
+  function start(){
+    if(t>=TOTAL-0.06)t=0;
+    playing=true;last=null;btnPlay.textContent="Pausa";
+    requestAnimationFrame(tick);
+  }
+  function stop(){playing=false;last=null;btnPlay.textContent="Reproducir"}
+
+  btnPlay.addEventListener("click",function(){playing?stop():start()});
+  btnBack.addEventListener("click",function(){stop();seek(0)});
+  document.addEventListener("keydown",function(e){
+    if(e.code==="Space"){e.preventDefault();playing?stop():start()}
+    if(e.code==="ArrowRight"){e.preventDefault();seek(t+2)}
+    if(e.code==="ArrowLeft"){e.preventDefault();seek(t-2)}
+  });
+
+  render();
+})();
+</script>
