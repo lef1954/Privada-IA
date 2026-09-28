@@ -21,9 +21,11 @@ trabajo**, y cumple tres funciones al mismo tiempo:
 
 | Archivo | Para qué |
 |---|---|
-| `01-prompts-listos.md` | Los 14 prompts, **autocontenidos**: las fichas de personaje ya están pegadas adentro. Se copia y se pega, no hay nada que completar. |
+| `04-veo3-prompts.md` | **Si generás con Veo 3, usá este y no el 01.** Los 14 prompts en forma de párrafo, con el `negative_prompt` en campo aparte, el audio nativo aprovechado, los tres planos que necesitan el reescritor apagado y el presupuesto estimado. |
+| `01-prompts-listos.md` | La versión genérica de los 14 prompts, **autocontenidos**: las fichas de personaje ya están pegadas adentro. Para cualquier generador que no sea Veo. |
 | `02-montaje.md` | El timeline con timecodes exactos, rótulos, y las cinco capas de audio. |
-| `03-ensamblar.sh` | Script de ffmpeg que toma los 14 clips y arma el video final: recorte a 2.39:1, grano, rótulos, fundidos y mezcla. |
+| `03-ensamblar.sh` | Script de ffmpeg que toma los 14 clips y arma el video final: punto de entrada por clip, recorte a 2.39:1, grano, rótulos, placas y concatenado. |
+| `animatico.html` | El animático jugable con los tiempos reales de montaje. |
 
 ## Estructura del video
 

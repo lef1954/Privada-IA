@@ -9,8 +9,10 @@
 # USO
 #   1. Poner los 14 clips en una carpeta, con los nombres T01.mp4 ... T14.mp4
 #      (cualquier extension de video sirve: .mp4, .mov, .webm)
-#   2. bash 03-ensamblar.sh /ruta/a/la/carpeta/de/clips
-#   3. El resultado queda en <carpeta>/salida/TIERRA_ALTA_APERTURA.mp4
+#   2. Si generaste con Veo 3 (clips de 8 s fijos), ajustar el arreglo OFFS de abajo para
+#      elegir que parte de cada clip se usa. Ver la tabla en 04-veo3-prompts.md.
+#   3. bash 03-ensamblar.sh /ruta/a/la/carpeta/de/clips
+#   4. El resultado queda en <carpeta>/salida/TIERRA_ALTA_APERTURA.mp4
 #
 # REQUISITOS: ffmpeg y ffprobe (https://ffmpeg.org/download.html)
 #
@@ -38,6 +40,12 @@ CON=1.04            # contraste global
 # Duraciones exactas de cada clip, en segundos (ver 02-montaje.md)
 CLIPS=(T01 T02 T03 T04 T05 T06 T07 T08 T09 T10 T11 T12 T13 T14)
 DURS=(  8   6   8   6   8   8   7   5   5   5   5   6   6   7)
+
+# Punto de entrada dentro de cada clip generado, en segundos.
+# Veo 3 devuelve clips de 8 segundos fijos y el montaje necesita menos, asi que aca se elige
+# QUE PARTE de esos 8 segundos se usa. Ver la tabla al final de 04-veo3-prompts.md.
+# Ejemplo: si en T02 los pajaros despegan en el segundo 3, poner 2 para entrar un segundo antes.
+OFFS=(  0   0   0   0   0   0   0   0   0   0   0   0   0   0)
 
 TITLE_DUR=4
 END_DUR=5
@@ -106,19 +114,29 @@ VF="${VF},format=yuv420p"
 for i in "${!CLIPS[@]}"; do
   name="${CLIPS[$i]}"
   dur="${DURS[$i]}"
+  off="${OFFS[$i]:-0}"
   src="${SRC[$i]}"
   out="$WORK_DIR/n_${name}.mp4"
-  echo "==> normalizando $name  (${dur}s)"
+
+  # Verificar que el clip generado alcance para el punto de entrada pedido
+  srcdur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$src" 2>/dev/null || echo 0)
+  need=$(awk -v o="$off" -v d="$dur" 'BEGIN{print o+d}')
+  if awk -v s="$srcdur" -v n="$need" 'BEGIN{exit !(s < n - 0.05)}'; then
+    echo "  AVISO: $name dura ${srcdur}s y se piden ${need}s (entrada ${off}s + ${dur}s)."
+    echo "         Bajar OFFS[$i] o volver a generar el clip mas largo."
+  fi
+
+  echo "==> normalizando $name  (entrada ${off}s, ${dur}s)"
 
   # Si el clip no trae audio, se le agrega silencio para que el concat no se rompa
   if ffprobe -v error -select_streams a -show_entries stream=index -of csv=p=0 "$src" | grep -q .; then
-    ffmpeg -y -v error -stats -i "$src" \
+    ffmpeg -y -v error -stats -ss "$off" -i "$src" \
       -t "$dur" -vf "$VF" -af "aresample=48000" \
       -c:v libx264 -crf 18 -preset medium \
       -c:a aac -b:a 192k -ac 2 -ar 48000 \
       "$out"
   else
-    ffmpeg -y -v error -stats -i "$src" -f lavfi -i anullsrc=r=48000:cl=stereo \
+    ffmpeg -y -v error -stats -ss "$off" -i "$src" -f lavfi -i anullsrc=r=48000:cl=stereo \
       -t "$dur" -vf "$VF" \
       -c:v libx264 -crf 18 -preset medium \
       -c:a aac -b:a 192k -ac 2 -ar 48000 \
