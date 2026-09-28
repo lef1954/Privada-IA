@@ -239,7 +239,7 @@ def L3_tele():
     d = ImageDraw.Draw(img)
 
     # cono sur, simplificado
-    cx, cy, sc = PW * 0.50, PH * 0.50, PH * 0.0034
+    cx, cy, sc = PW * 0.50, PH * 0.50, PH * 0.00059
     pts = [(-52, -130), (-20, -128), (10, -112), (28, -86), (34, -58), (30, -30),
            (22, 4), (12, 44), (2, 82), (-6, 112), (-16, 128), (-30, 126),
            (-34, 104), (-30, 70), (-36, 34), (-44, -2), (-52, -40), (-58, -78),
@@ -384,8 +384,14 @@ def L6_ruta():
         v = int(70 + RNG.random() * 150)
         d.point((x, y), fill=(v, v, v))
 
+    d.rectangle([0, hz, PW, PH], fill=hexc("#0b0c0e"))
     d.polygon([(vpx - 14, hz), (vpx + 14, hz), (PW * 1.25, PH), (-PW * 0.25, PH)],
-              fill=hexc("#14161a"))
+              fill=hexc("#1e2126"))
+    for i in range(14):
+        z = (i / 14.0) ** 2.2
+        y = hz + (PH - hz) * z
+        seg = 6 + 60 * z
+        d.line([vpx, y, vpx + 2, y + seg], fill=hexc("#3a3d42"), width=max(1, int(1 + 5 * z)))
 
     # luces rojas: la fila que no se mueve
     ov = overlay(img)
@@ -438,8 +444,14 @@ def L7_salida():
         v = int(60 + RNG.random() * 130)
         d.point((x, y), fill=(v, v, v))
 
+    d.rectangle([0, hz, PW, PH], fill=hexc("#0b0b0d"))
     d.polygon([(PW * 0.50, hz), (PW * 0.56, hz), (PW * 1.3, PH), (-PW * 0.2, PH)],
-              fill=hexc("#141416"))
+              fill=hexc("#1d1e22"))
+    for i in range(12):
+        z = (i / 12.0) ** 2.2
+        y = hz + (PH - hz) * z
+        d.line([PW * 0.53, y, PW * 0.53 + 3, y + 8 + 62 * z], fill=hexc("#3a3b40"),
+               width=max(1, int(1 + 5 * z)))
 
     # el camion, de atras, alejandose
     bx, by, bw, bh = PW * 0.50, PH * 0.78, 300, 250
@@ -501,8 +513,14 @@ def L8_espejo():
         x, y = RNG.random() * iw, RNG.random() * hz * 0.8
         v = int(50 + RNG.random() * 110)
         idr.point((x, y), fill=(v, v, v))
+    idr.rectangle([0, hz, iw, ih], fill=hexc("#0c0c0e"))
     idr.polygon([(iw * 0.48, hz), (iw * 0.54, hz), (iw * 1.25, ih), (-iw * 0.25, ih)],
-                fill=hexc("#17171a"))
+                fill=hexc("#1e1f23"))
+    for i in range(10):
+        z = (i / 10.0) ** 2.2
+        y = hz + (ih - hz) * z
+        idr.line([iw * 0.51, y, iw * 0.51 + 2, y + 6 + 44 * z], fill=hexc("#3b3c41"),
+                 width=max(1, int(1 + 4 * z)))
 
     # el punto de luz: chico, quieto, con un halo minimo
     lx, ly = iw * 0.70, hz - ih * 0.26
