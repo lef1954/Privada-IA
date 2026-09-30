@@ -1,0 +1,619 @@
+<title>Láminas Episodio 1</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+  :root{
+    color-scheme: dark;
+    --ink:#0a0a0b; --panel:#131316; --line:#26262c; --soft:#1c1c21;
+    --bone:#e9e5dd; --dim:#8b867c; --dimmer:#5d594f; --faint:#39362f;
+    --wheat:#c9a24b; --cold:#7d95ab; --sodio:#d06f39;
+    --display:"Bodoni Moda",Georgia,serif;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--sans);
+       font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:30px 60px}
+
+  .head{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 26px;margin-bottom:18px}
+  .head h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,5.6vw,42px);
+    letter-spacing:.13em;margin:0;line-height:1.05;text-wrap:balance}
+  .head .sub{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;
+    color:var(--dim);text-transform:uppercase}
+  .warn{margin:0 0 24px;padding:11px 14px;border:1px solid var(--line);
+    border-left:2px solid var(--sodio);background:var(--panel);
+    font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--dim)}
+  .warn b{color:var(--bone);font-weight:500}
+
+  .stage{position:relative;width:100%;aspect-ratio:2.39/1;background:#000;
+    border:1px solid var(--line);overflow:hidden}
+  .stage canvas{display:block;width:100%;height:100%}
+  .cap{position:absolute;left:0;right:0;bottom:0;padding:22px 26px 18px;
+    background:linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,0));
+    pointer-events:none}
+  .cap .line{font-family:var(--display);font-size:clamp(15px,2.6vw,24px);
+    line-height:1.25;margin:0 0 7px;text-wrap:balance}
+  .cap .rot{font-family:var(--mono);font-size:clamp(9px,1.4vw,11.5px);
+    letter-spacing:.17em;color:rgba(255,255,255,.55)}
+  .badge{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:10px;
+    letter-spacing:.2em;color:rgba(255,255,255,.28);pointer-events:none}
+
+  .bar{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+  button{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    background:var(--panel);color:var(--bone);border:1px solid var(--line);
+    padding:9px 15px;cursor:pointer;transition:border-color .15s,background .15s}
+  button:hover{border-color:var(--dim);background:#1d1d22}
+  button:focus-visible{outline:2px solid var(--wheat);outline-offset:2px}
+  .count{font-family:var(--mono);font-size:12.5px;color:var(--dim);
+    font-variant-numeric:tabular-nums}
+
+  .strip{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:16px}
+  .thumb{position:relative;aspect-ratio:2.39/1;border:1px solid var(--soft);
+    background:#000;cursor:pointer;overflow:hidden;padding:0;transition:border-color .15s}
+  .thumb canvas{display:block;width:100%;height:100%}
+  .thumb:hover{border-color:var(--dim)}
+  .thumb[aria-current="true"]{border-color:var(--bone)}
+  .thumb span{position:absolute;left:4px;bottom:3px;font-family:var(--mono);font-size:9px;
+    color:rgba(255,255,255,.65);letter-spacing:.08em}
+
+  h2{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--dim);margin:36px 0 12px;font-weight:500}
+  .note{font-size:13.5px;color:var(--dim);max-width:66ch}
+  .note p{margin:0 0 12px}
+  .note p:last-child{margin:0}
+  .note b{color:var(--bone);font-weight:500}
+
+  @media (max-width:640px){
+    .strip{grid-template-columns:repeat(4,1fr)}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="head">
+    <h1>TIERRA ALTA</h1>
+    <div class="sub">Episodio 1 · «Hora cero» · Ocho láminas</div>
+  </div>
+
+  <p class="warn">
+    <b>Dibujadas, no generadas.</b> No son fotogramas de la serie ni imágenes de IA: son
+    láminas de concepto trazadas por código, en estilo gráfico de siluetas. Fijan
+    <b>encuadre, luz y paleta</b> de ocho momentos del Episodio 1 — que es exactamente para
+    lo que sirve un concept board antes de generar.
+  </p>
+
+  <div class="stage">
+    <canvas id="stage" width="1600" height="669"></canvas>
+    <div class="badge" id="badge"></div>
+    <div class="cap">
+      <p class="line" id="capLine"></p>
+      <div class="rot" id="capRot"></div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button id="prev">◀ Anterior</button>
+    <button id="play">Reproducir</button>
+    <button id="next">Siguiente ▶</button>
+    <div class="count" id="count"></div>
+  </div>
+
+  <div class="strip" id="strip"></div>
+
+  <h2>Qué mirar</h2>
+  <div class="note">
+    <p><b>La lámina 2 y la lámina 8 son la serie entera.</b> En la 2, una perra mira hacia el
+      este y no hay nada que ver. En la 8, en el espejo retrovisor, hay un punto de luz en el
+      cielo del este. Es la misma dirección, y entre una y otra pasan cuatro horas.</p>
+    <p><b>La lámina 5 no es decorado: es el plan.</b> La ruta es real, las siete ciudades son
+      reales y las cotas son reales. 115 metros en Tres Arroyos, 12 en Bahía Blanca — el punto
+      más bajo y más peligroso de todo el viaje — y 770 en Bariloche.</p>
+    <p><b>Ninguna lámina muestra el meteorito, la ola ni el agua.</b> El Episodio 1 se gana con
+      gente en cocinas, y la única señal del apocalipsis es una luz que podría ser cualquier
+      cosa.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var PLATES = [
+    {id:"1.01", draw:pTrigo,  line:"Un mar de trigo maduro moviéndose despacio.",
+     rot:"TRES ARROYOS, BUENOS AIRES   ·   H − 31:40", short:"Trigo"},
+    {id:"1.03", draw:pCalle,  line:"Pampa mira hacia el este. No hay nada que ver.",
+     rot:"H − 31:40   ·   COTA 115 m", short:"Calle"},
+    {id:"1.06", draw:pTele,   line:"Dos líneas punteadas. Dos puntos rojos.",
+     rot:"CADENA NACIONAL   ·   H − 31:12", short:"TV"},
+    {id:"1.07", draw:pCocina, line:"Una mujer se sienta sin mirar la silla.",
+     rot:"H − 31:10", short:"Cocina"},
+    {id:"1.33", draw:pMapa,   line:"Mil trescientos veinte kilómetros. Y ochocientos metros para arriba.",
+     rot:"TALLER DE DON ALDO   ·   H − 28:10", short:"Mapa"},
+    {id:"3.01", draw:pRuta,   line:"Esto ya no es una ruta. Es una cola.",
+     rot:"RN 3 OESTE   ·   H − 21:00", short:"Ruta 3"},
+    {id:"2.09", draw:pSalida, line:"Y después, la última casa del pueblo.",
+     rot:"H − 22:00   ·   COTA 112 m   ·   8 km RECORRIDOS", short:"Salida"},
+    {id:"1.49", draw:pEspejo, line:"Y en el cielo del este, un punto de luz que no es la luna.",
+     rot:"H − 27:00", short:"Espejo"}
+  ];
+
+  var RW = 1600, RH = 669;              // resolucion de trazado
+  var cache = [];
+  var cur = 0, playing = false, raf = null, t0 = 0;
+  var PLATE_MS = 5200;
+
+  // ---------------------------------------------------------- utilidades
+
+  var seed = 12345;
+  function rnd(){ seed = (seed*1664525 + 1013904223) & 0x7fffffff; return seed/0x7fffffff; }
+  function rs(s){ seed = s; }
+  function gauss(){ return (rnd()+rnd()+rnd()+rnd()-2)/1.2; }
+
+  function grad(ctx, stops, h){
+    var g = ctx.createLinearGradient(0,0,0,h);
+    stops.forEach(function(s){ g.addColorStop(s[0], s[1]); });
+    return g;
+  }
+  function radial(ctx, x, y, r, inner, outer){
+    var g = ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0, inner); g.addColorStop(1, outer);
+    return g;
+  }
+  function glow(ctx, x, y, r, col, alpha){
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = radial(ctx, x, y, r, col, "rgba(0,0,0,0)");
+    ctx.fillRect(0,0,RW,RH);
+    ctx.restore();
+  }
+  function poly(ctx, pts, fill){
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.closePath();
+    ctx.fillStyle = fill; ctx.fill();
+  }
+  function vignette(ctx){
+    ctx.save();
+    ctx.globalCompositeOperation = "multiply";
+    var g = ctx.createRadialGradient(RW/2,RH/2,RH*0.25,RW/2,RH/2,RH*1.05);
+    g.addColorStop(0,"#ffffff"); g.addColorStop(1,"#6e6e6e");
+    ctx.fillStyle = g; ctx.fillRect(0,0,RW,RH);
+    ctx.restore();
+  }
+  function grain(ctx, amt){
+    var d = ctx.getImageData(0,0,RW,RH), p = d.data;
+    for(var i=0;i<p.length;i+=4){
+      var n = (Math.random()-0.5)*amt;
+      p[i]+=n; p[i+1]+=n; p[i+2]+=n;
+    }
+    ctx.putImageData(d,0,0);
+  }
+  function finish(ctx, gr){ vignette(ctx); grain(ctx, gr===undefined?26:gr); }
+
+  // ---------------------------------------------------------- láminas
+
+  function pTrigo(ctx){
+    rs(101);
+    var hz = RH*0.50;
+    ctx.fillStyle = grad(ctx,[[0,"#1b3450"],[0.30,"#4a6a86"],[0.44,"#9db1b8"],
+      [0.498,"#f2c887"],[0.50,"#c9a45e"],[1,"#5a4526"]], RH);
+    ctx.fillRect(0,0,RW,RH);
+    glow(ctx, RW*0.27, hz-18, RH*0.62, "rgba(255,190,90,.55)", 0.55);
+
+    ctx.fillStyle = "#ffe2a6";
+    ctx.beginPath(); ctx.ellipse(RW*0.27, hz-24, 30, 26, 0, 0, 6.2832); ctx.fill();
+
+    for(var i=0;i<42;i++){
+      var x = 70 + i*9 + rnd()*5, h = 10 + rnd()*10;
+      ctx.fillStyle = "#8d7b55";
+      ctx.fillRect(x, hz-h, 8, h+2);
+    }
+
+    ctx.lineWidth = 1;
+    for(var k=0;k<34000;k++){
+      var u = Math.pow(rnd(),1.7);
+      var y = hz + u*(RH-hz), x = rnd()*RW;
+      var dep = (y-hz)/(RH-hz);
+      var ln = 5 + dep*24, lean = gauss()*0.30*(0.4+dep);
+      var f = (1-dep*0.62)*(0.80+rnd()*0.42);
+      ctx.strokeStyle = "rgb("+(214*f|0)+","+(168*f|0)+","+(86*f|0)+")";
+      ctx.lineWidth = dep<0.55?1:1.6;
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+lean*ln, y-ln); ctx.stroke();
+    }
+
+    ctx.strokeStyle = "#1c2a38"; ctx.lineWidth = 2;
+    for(var b=0;b<16;b++){
+      var bx = RW*0.56 + rnd()*RW*0.34, by = RH*0.10 + rnd()*RH*0.20, s = 5+rnd()*6;
+      ctx.beginPath();
+      ctx.moveTo(bx-s,by); ctx.lineTo(bx,by-s*0.45); ctx.lineTo(bx+s,by); ctx.stroke();
+    }
+    finish(ctx, 22);
+  }
+
+  function pCalle(ctx){
+    rs(202);
+    var hz = RH*0.47, vpx = RW*0.52;
+    ctx.fillStyle = grad(ctx,[[0,"#39434e"],[0.34,"#6e7b85"],[0.46,"#a8b2b6"],
+      [0.47,"#6a6257"],[1,"#2b2723"]], RH);
+    ctx.fillRect(0,0,RW,RH);
+
+    poly(ctx,[[vpx-14,hz],[vpx+14,hz],[RW*1.22,RH],[-RW*0.22,RH]],"#43403b");
+    poly(ctx,[[vpx-20,hz],[vpx-13,hz],[-RW*0.16,RH],[-RW*0.30,RH]],"#514c44");
+    poly(ctx,[[vpx+13,hz],[vpx+20,hz],[RW*1.30,RH],[RW*1.16,RH]],"#514c44");
+
+    [-1,1].forEach(function(side){
+      var z = 0.055;
+      while(z < 1.0){
+        var sc = Math.pow(z,1.5);
+        var x0 = vpx + side*(22 + 1000*sc);
+        var x1 = vpx + side*(22 + 1000*(sc + 0.09*(0.3+sc)));
+        var h = (24 + 210*sc)*(0.75 + rnd()*0.6);
+        var v = (26 + 30*(1-sc))|0;
+        poly(ctx,[[x0,hz-h],[x1,hz-h*1.10],[x1,RH],[x0,RH]],
+             "rgb("+v+","+(v-2)+","+(v-5)+")");
+        z += 0.085;
+      }
+    });
+
+    var z2 = 0.09;
+    ctx.strokeStyle = "#1b1a18";
+    while(z2 < 1.0){
+      var sc2 = Math.pow(z2,1.5);
+      var x = vpx - (20 + 940*sc2), h2 = 40 + 360*sc2;
+      ctx.lineWidth = Math.max(1, 1.4 + 5*sc2);
+      ctx.beginPath(); ctx.moveTo(x, hz-h2); ctx.lineTo(x, hz+8*sc2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, hz-h2); ctx.lineTo(x + 26*sc2 + 4, hz-h2+4); ctx.stroke();
+      z2 += 0.17;
+    }
+
+    // la perra, de espaldas
+    var cx = RW*0.30, cy = RH*0.95, S = 0.70, D = "#0e0d0c";
+    poly(ctx,[[cx-62*S,cy],[cx-46*S,cy-150*S],[cx-30*S,cy-215*S],
+              [cx+30*S,cy-215*S],[cx+46*S,cy-150*S],[cx+62*S,cy]], D);
+    ctx.fillStyle = D;
+    ctx.beginPath(); ctx.ellipse(cx, cy-248*S, 44*S, 52*S, 0,0,6.2832); ctx.fill();
+    poly(ctx,[[cx-42*S,cy-268*S],[cx-20*S,cy-340*S],[cx-8*S,cy-262*S]], D);
+    poly(ctx,[[cx+10*S,cy-262*S],[cx+32*S,cy-322*S],[cx+44*S,cy-256*S]], D);
+    poly(ctx,[[cx+52*S,cy-20*S],[cx+124*S,cy-56*S],[cx+130*S,cy-34*S],[cx+58*S,cy+4*S]], D);
+
+    finish(ctx, 24);
+  }
+
+  function pTele(ctx){
+    rs(303);
+    ctx.fillStyle = "#090a0a"; ctx.fillRect(0,0,RW,RH);
+    var x0=RW*0.14, y0=RH*0.10, x1=RW*0.86, y1=RH*0.90;
+    ctx.fillStyle = "#0d1712";
+    roundRect(ctx,x0,y0,x1-x0,y1-y0,60); ctx.fill();
+    glow(ctx,(x0+x1)/2,(y0+y1)/2,RH*0.55,"rgba(40,110,72,.5)",0.6);
+
+    var cx=(x0+x1)/2, cy=(y0+y1)/2, sc=RH*0.0072;
+    var pts=[[-52,-130],[-20,-128],[10,-112],[28,-86],[34,-58],[30,-30],[22,4],
+             [12,44],[2,82],[-6,112],[-16,128],[-30,126],[-34,104],[-30,70],
+             [-36,34],[-44,-2],[-52,-40],[-58,-78],[-60,-108]];
+    var P = pts.map(function(p){ return [cx+p[0]*sc, cy+p[1]*sc]; });
+    poly(ctx,P,"#2a4a3a");
+    ctx.strokeStyle="#5f8f72"; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(P[0][0],P[0][1]);
+    P.forEach(function(p){ctx.lineTo(p[0],p[1]);}); ctx.closePath(); ctx.stroke();
+
+    var dots=[[cx-RW*0.098,cy-RH*0.06],[cx+RW*0.090,cy-RH*0.03]];
+    dots.forEach(function(D){
+      var sx=cx+(D[0]-cx)*0.25, sy=y0+26;
+      ctx.fillStyle="#cfe4d6";
+      for(var i=0;i<30;i+=2){
+        var t=i/29, px=sx+(D[0]-sx)*t, py=sy+(D[1]-sy)*t-Math.sin(t*Math.PI)*46;
+        ctx.beginPath(); ctx.arc(px,py,2.2,0,6.2832); ctx.fill();
+      }
+    });
+    dots.forEach(function(D){ glow(ctx,D[0],D[1],78,"rgba(230,50,36,.85)",0.75); });
+    dots.forEach(function(D){
+      ctx.fillStyle="#ff4a36";
+      ctx.beginPath(); ctx.arc(D[0],D[1],9,0,6.2832); ctx.fill();
+    });
+
+    ctx.fillStyle="#8e1a12"; ctx.fillRect(x0+42,y1-104,(x1-x0)-84,50);
+    ctx.fillStyle="#d8b9b4";
+    for(var i=0;i<7;i++) ctx.fillRect(x0+64+i*112, y1-88, 80, 16);
+
+    ctx.fillStyle="rgba(0,0,0,.34)";
+    for(var y=y0;y<y1;y+=3) ctx.fillRect(x0,y,x1-x0,1);
+
+    finish(ctx, 30);
+  }
+
+  function pCocina(ctx){
+    rs(404);
+    ctx.fillStyle = grad(ctx,[[0,"#14120f"],[1,"#0a0908"]], RH);
+    ctx.fillRect(0,0,RW,RH);
+    var wx0=RW*0.42, wy0=RH*0.07, wx1=RW*0.86, wy1=RH*0.66;
+    glow(ctx,(wx0+wx1)/2,(wy0+wy1)/2,RH*0.85,"rgba(255,238,205,.62)",0.85);
+    ctx.fillStyle="#ffeecd"; ctx.fillRect(wx0,wy0,wx1-wx0,wy1-wy0);
+    ctx.fillStyle="#6a5c44";
+    ctx.fillRect((wx0+wx1)/2-6, wy0, 12, wy1-wy0);
+    ctx.fillRect(wx0, RH*0.34, wx1-wx0, 7);
+
+    ctx.fillStyle="#241f19"; ctx.fillRect(0,RH*0.735,RW,RH*0.056);
+    ctx.fillStyle="#0c0b09"; ctx.fillRect(0,RH*0.79,RW,RH*0.21);
+
+    var hx=RW*0.60, hy=RH*0.44, D="#070707";
+    ctx.fillStyle=D;
+    ctx.beginPath(); ctx.ellipse(hx,hy-14,50,54,0,0,6.2832); ctx.fill();
+    poly(ctx,[[hx-166,RH*0.78],[hx-100,hy+52],[hx-40,hy+26],[hx+40,hy+26],
+              [hx+100,hy+52],[hx+166,RH*0.78]], D);
+    poly(ctx,[[hx+46,hy+64],[hx+140,RH*0.70],[hx+150,RH*0.735],[hx+52,hy+88]], D);
+    ctx.fillStyle=D;
+    ctx.beginPath(); ctx.arc(hx+150,RH*0.775,9,0,6.2832); ctx.fill();
+    ctx.beginPath(); ctx.arc(RW*0.27+20,RH*0.723,20,0,6.2832); ctx.fill();
+    ctx.strokeStyle=D; ctx.lineWidth=5;
+    ctx.beginPath(); ctx.moveTo(RW*0.27+32,RH*0.708); ctx.lineTo(RW*0.27+40,RH*0.648); ctx.stroke();
+
+    finish(ctx, 26);
+  }
+
+  function pMapa(ctx){
+    rs(505);
+    ctx.fillStyle="#cebe9e"; ctx.fillRect(0,0,RW,RH);
+    ctx.save(); ctx.globalCompositeOperation="multiply";
+    ctx.fillStyle = radial(ctx,RW*0.5,RH*0.42,RW*0.68,"rgba(255,255,255,1)","rgba(120,108,80,1)");
+    ctx.fillRect(0,0,RW,RH); ctx.restore();
+
+    ctx.strokeStyle="#b6a488"; ctx.lineWidth=2;
+    [0.25,0.5,0.75].forEach(function(f){
+      ctx.beginPath(); ctx.moveTo(RW*f,0); ctx.lineTo(RW*f,RH); ctx.stroke();
+    });
+    ctx.beginPath(); ctx.moveTo(0,RH*0.5); ctx.lineTo(RW,RH*0.5); ctx.stroke();
+
+    var cities=[["TRES ARROYOS",115,0.845,0.40],["BAHÍA BLANCA",12,0.735,0.47],
+                ["RÍO COLORADO",79,0.620,0.50],["CHOELE CHOEL",86,0.530,0.52],
+                ["NEUQUÉN",265,0.360,0.55],["PIEDRA DEL ÁGUILA",600,0.235,0.63],
+                ["BARILOCHE",770,0.130,0.68]];
+
+    ctx.strokeStyle="#8e2f1c"; ctx.lineWidth=6; ctx.lineJoin="round";
+    ctx.beginPath();
+    cities.forEach(function(c,i){
+      var x=RW*c[2], y=RH*c[3];
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+
+    ctx.font = '15px "IBM Plex Mono", monospace';
+    ctx.textAlign="center";
+    cities.forEach(function(c){
+      var x=RW*c[2], y=RH*c[3];
+      ctx.fillStyle="#2b2418";
+      ctx.beginPath(); ctx.arc(x,y,9,0,6.2832); ctx.fill();
+      ctx.fillStyle="#cebe9e";
+      ctx.beginPath(); ctx.arc(x,y,4,0,6.2832); ctx.fill();
+      ctx.fillStyle="#2b2418";
+      ctx.fillText(c[0]+"  "+c[1]+" m", x, c[1]>=265 ? y-22 : y+30);
+    });
+
+    ctx.strokeStyle="#1d4f7a"; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    ctx.moveTo(RW*0.845,RH*0.40); ctx.lineTo(RW*0.130,RH*0.68); ctx.stroke();
+    ctx.textAlign="left"; ctx.fillStyle="#1d4f7a";
+    ctx.font = '600 44px "Bodoni Moda", Georgia, serif';
+    ctx.fillText("1.320 km", RW*0.40, RH*0.84);
+    ctx.font = '17px "IBM Plex Mono", monospace';
+    ctx.fillText("115 m   →   770 m", RW*0.40, RH*0.90);
+    ctx.textAlign="left";
+
+    finish(ctx, 30);
+  }
+
+  function pRuta(ctx){
+    rs(606);
+    var hz=RH*0.42, vpx=RW*0.47;
+    ctx.fillStyle = grad(ctx,[[0,"#05070c"],[0.36,"#0a1018"],[0.42,"#161c22"],[1,"#08090a"]],RH);
+    ctx.fillRect(0,0,RW,RH);
+    for(var i=0;i<300;i++){
+      var x=rnd()*RW, y=rnd()*hz*0.9, v=(70+rnd()*150)|0;
+      ctx.fillStyle="rgb("+v+","+v+","+v+")";
+      ctx.fillRect(x,y,1.4,1.4);
+    }
+    poly(ctx,[[vpx-9,hz],[vpx+9,hz],[RW*1.25,RH],[-RW*0.25,RH]],"#14161a");
+
+    var z=0.006;
+    while(z<1.0){
+      var sc=z*z, y2=hz+(RH-hz)*sc, off=20+600*sc, r=Math.max(1.1,1.3+11*sc);
+      glow(ctx, vpx+off, y2, r*7, "rgba(255,60,40,.55)", 0.30);
+      z+=0.020;
+    }
+    z=0.006;
+    while(z<1.0){
+      var sc2=z*z, y3=hz+(RH-hz)*sc2, off2=20+600*sc2, r2=Math.max(0.9,1.1+6*sc2);
+      ctx.fillStyle="#ff5a3c";
+      [-r2*2.6, r2*2.6].forEach(function(dx){
+        ctx.beginPath(); ctx.arc(vpx+off2+dx, y3, r2, 0, 6.2832); ctx.fill();
+      });
+      if(((z*1000)|0) % 7 === 0){
+        ctx.fillStyle="#e9e2cf";
+        ctx.beginPath(); ctx.arc(vpx-off2, y3, r2, 0, 6.2832); ctx.fill();
+      }
+      z+=0.020;
+    }
+    finish(ctx, 24);
+  }
+
+  function pSalida(ctx){
+    rs(707);
+    var hz=RH*0.46;
+    ctx.fillStyle = grad(ctx,[[0,"#05070d"],[0.38,"#0b1119"],[0.46,"#1a1a1c"],[1,"#0a0a0b"]],RH);
+    ctx.fillRect(0,0,RW,RH);
+    glow(ctx, RW*0.20, hz+24, RH*0.78, "rgba(200,90,26,.55)", 0.55);
+    for(var i=0;i<200;i++){
+      var x=rnd()*RW, y=rnd()*hz*0.75, v=(60+rnd()*130)|0;
+      ctx.fillStyle="rgb("+v+","+v+","+v+")"; ctx.fillRect(x,y,1.3,1.3);
+    }
+    poly(ctx,[[RW*0.50,hz],[RW*0.56,hz],[RW*1.3,RH],[-RW*0.2,RH]],"#141416");
+
+    var bx=RW*0.50, by=RH*0.80, bw=196, bh=166;
+    ctx.fillStyle="#0a0a0b";
+    ctx.fillRect(bx-bw/2, by-bh, bw, bh);
+    ctx.fillRect(bx-bw/2-11, by-bh-10, bw+22, 10);
+    ctx.fillStyle="#c8721f";
+    for(var m=0;m<5;m++) ctx.fillRect(bx-62+m*31, by-bh-8, 11, 6);
+    [-1,1].forEach(function(s){ glow(ctx, bx+s*68, by-50, 62, "rgba(255,50,32,.9)", 0.6); });
+    ctx.fillStyle="#ff3b26";
+    [-1,1].forEach(function(s){ ctx.fillRect(bx+s*68-13, by-60, 26, 19); });
+
+    var cx0=RW*0.70, cy0=RH*0.42, cx1=RW*0.945, cy1=RH*0.63;
+    ctx.fillStyle="#2a2620"; ctx.fillRect(cx0-6,cy0-6,(cx1-cx0)+12,(cy1-cy0)+12);
+    ctx.fillStyle="#5d5748"; ctx.fillRect(cx0,cy0,cx1-cx0,cy1-cy0);
+    ctx.fillStyle="#241f19"; ctx.fillRect((cx0+cx1)/2-6, cy1, 12, RH*0.88-cy1);
+    ctx.textAlign="center";
+    ctx.fillStyle="#cdc6b2"; ctx.font='600 21px "IBM Plex Sans", sans-serif';
+    ctx.fillText("TRES ARROYOS", (cx0+cx1)/2, cy0+52);
+    ctx.fillStyle="#a49d8b"; ctx.font='13px "IBM Plex Mono", monospace';
+    ctx.fillText("GRACIAS POR SU VISITA", (cx0+cx1)/2, cy0+92);
+    ctx.textAlign="left";
+
+    finish(ctx, 24);
+  }
+
+  function pEspejo(ctx){
+    rs(808);
+    ctx.fillStyle="#070707"; ctx.fillRect(0,0,RW,RH);
+    var mx0=RW*0.17, my0=RH*0.14, mx1=RW*0.83, my1=RH*0.86;
+    ctx.fillStyle="#131315";
+    roundRect(ctx,mx0-18,my0-18,(mx1-mx0)+36,(my1-my0)+36,28); ctx.fill();
+
+    ctx.save();
+    ctx.beginPath(); ctx.rect(mx0,my0,mx1-mx0,my1-my0); ctx.clip();
+    var iw=mx1-mx0, ih=my1-my0, hz=my0+ih*0.45;
+    var g=ctx.createLinearGradient(0,my0,0,my1);
+    [[0,"#070a10"],[0.36,"#0d141c"],[0.45,"#241a12"],[1,"#0c0b0a"]]
+      .forEach(function(s){ g.addColorStop(s[0],s[1]); });
+    ctx.fillStyle=g; ctx.fillRect(mx0,my0,iw,ih);
+    glow(ctx, mx0+iw*0.52, hz+6, iw*0.46, "rgba(190,72,24,.75)", 0.6);
+    for(var i=0;i<130;i++){
+      var x=mx0+rnd()*iw, y=my0+rnd()*ih*0.40, v=(50+rnd()*110)|0;
+      ctx.fillStyle="rgb("+v+","+v+","+v+")"; ctx.fillRect(x,y,1.2,1.2);
+    }
+    poly(ctx,[[mx0+iw*0.48,hz],[mx0+iw*0.54,hz],[mx0+iw*1.25,my1],[mx0-iw*0.25,my1]],"#17171a");
+    var lx=mx0+iw*0.70, ly=hz-ih*0.26;
+    glow(ctx, lx, ly, 46, "rgba(225,235,255,.9)", 0.42);
+    ctx.fillStyle="#f2f5ff";
+    ctx.beginPath(); ctx.ellipse(lx,ly,3.6,2.8,0,0,6.2832); ctx.fill();
+    ctx.restore();
+
+    for(var d=0;d<200;d++){
+      var px=mx0+rnd()*(mx1-mx0), py=my0+rnd()*(my1-my0), v2=(30+rnd()*60)|0;
+      ctx.fillStyle="rgba("+v2+","+v2+","+v2+",.6)"; ctx.fillRect(px,py,1.3,1.3);
+    }
+    ctx.strokeStyle="#2a2a2d"; ctx.lineWidth=4;
+    roundRect(ctx,mx0,my0,mx1-mx0,my1-my0,12); ctx.stroke();
+
+    finish(ctx, 26);
+  }
+
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);     ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  // ---------------------------------------------------------- viewer
+
+  function build(i){
+    if(cache[i]) return cache[i];
+    var c = document.createElement("canvas");
+    c.width = RW; c.height = RH;
+    var ctx = c.getContext("2d");
+    PLATES[i].draw(ctx);
+    cache[i] = c;
+    return c;
+  }
+
+  var stage = document.getElementById("stage");
+  var sctx = stage.getContext("2d");
+  var capLine = document.getElementById("capLine");
+  var capRot = document.getElementById("capRot");
+  var badge = document.getElementById("badge");
+  var count = document.getElementById("count");
+  var strip = document.getElementById("strip");
+
+  function paint(i, zoom){
+    var src = build(i);
+    var z = zoom === undefined ? 1 : zoom;
+    var cw = RW*z, ch = RH*z;
+    var sx = (RW-cw)/2, sy = (RH-ch)/2;
+    sctx.clearRect(0,0,RW,RH);
+    sctx.drawImage(src, sx, sy, cw, ch, 0, 0, RW, RH);
+  }
+
+  function show(i){
+    cur = ((i % PLATES.length) + PLATES.length) % PLATES.length;
+    paint(cur, 1);
+    capLine.textContent = PLATES[cur].line;
+    capRot.textContent = PLATES[cur].rot;
+    badge.textContent = "PLANO " + PLATES[cur].id;
+    count.textContent = (cur+1) + " / " + PLATES.length;
+    Array.prototype.forEach.call(strip.children, function(b,j){
+      b.setAttribute("aria-current", j===cur ? "true" : "false");
+    });
+  }
+
+  PLATES.forEach(function(p,i){
+    var b = document.createElement("button");
+    b.className = "thumb";
+    b.title = p.short + " · plano " + p.id;
+    var c = document.createElement("canvas");
+    c.width = 300; c.height = 125;
+    b.appendChild(c);
+    var s = document.createElement("span");
+    s.textContent = p.short;
+    b.appendChild(s);
+    b.addEventListener("click", function(){ stop(); show(i); });
+    strip.appendChild(b);
+  });
+
+  var playBtn = document.getElementById("play");
+  function stop(){
+    playing = false;
+    if(raf) cancelAnimationFrame(raf);
+    raf = null;
+    playBtn.textContent = "Reproducir";
+  }
+  function tick(now){
+    if(!playing) return;
+    if(!t0) t0 = now;
+    var el = now - t0;
+    var idx = Math.floor(el / PLATE_MS);
+    if(idx >= PLATES.length){ stop(); show(PLATES.length-1); return; }
+    if(idx !== cur){ show(idx); }
+    var p = (el - idx*PLATE_MS) / PLATE_MS;
+    paint(idx, 1 - 0.10*p);
+    raf = requestAnimationFrame(tick);
+  }
+  playBtn.addEventListener("click", function(){
+    if(playing){ stop(); return; }
+    playing = true; t0 = 0; cur = -1;
+    playBtn.textContent = "Pausa";
+    raf = requestAnimationFrame(tick);
+  });
+  document.getElementById("prev").addEventListener("click", function(){ stop(); show(cur-1); });
+  document.getElementById("next").addEventListener("click", function(){ stop(); show(cur+1); });
+  document.addEventListener("keydown", function(e){
+    if(e.code==="ArrowRight"){ stop(); show(cur+1); }
+    if(e.code==="ArrowLeft"){ stop(); show(cur-1); }
+  });
+
+  // primer trazado, y las miniaturas de a una para no trabar la página
+  show(0);
+  var q = 0;
+  (function fill(){
+    if(q >= PLATES.length) return;
+    var src = build(q);
+    var tc = strip.children[q].querySelector("canvas");
+    tc.getContext("2d").drawImage(src, 0, 0, 300, 125);
+    q++;
+    setTimeout(fill, 16);
+  })();
+})();
+</script>

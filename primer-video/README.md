@@ -26,6 +26,7 @@ trabajo**, y cumple tres funciones al mismo tiempo:
 | `02-montaje.md` | El timeline con timecodes exactos, rótulos, y las cinco capas de audio. |
 | `03-ensamblar.sh` | Script de ffmpeg que toma los 14 clips y arma el video final: punto de entrada por clip, recorte a 2.39:1, grano, rótulos, placas y concatenado. |
 | `animatico.html` | El animático jugable con los tiempos reales de montaje. |
+| `05-render-animatico.py` | Renderiza el animático como un `.mp4` real: 99 s, 1080p, timecode quemado, placas, rótulos y una pista de audio con un tick en cada corte y los tres silencios. Es la pieza que se aprueba **antes** de generar. |
 
 ## Estructura del video
 
@@ -57,6 +58,23 @@ Lo único que el espectador ve del apocalipsis es **una luz rara en el espejo re
 
 Es más difícil de resistir y es mucho más efectivo: la ola en el teaser convierte la serie en
 una película de catástrofe más. La perra mirando al este la convierte en algo que se quiere ver.
+
+## El animático en video
+
+Antes del día 1, renderizá el animático y miralo entero una vez:
+
+```bash
+apt-get install -y ffmpeg           # o brew install ffmpeg
+pip3 install Pillow numpy
+python3 primer-video/05-render-animatico.py primer-video/salida
+```
+
+Salen 99 segundos a 1080p con los tiempos exactos del montaje, un tick en cada corte y los
+tres silencios como caídas reales de audio. **No tiene imagen generada: es previz.** Sirve para
+una sola cosa, que es la más importante: aprobar el ritmo antes de gastar plata en generar.
+
+Si algo del montaje no te cierra, se cambia la tabla `SHOTS` del script y se vuelve a correr.
+Tarda medio minuto. Cambiarlo después, con 56 clips ya generados, cuesta muchísimo más.
 
 ## Orden de trabajo (4 días)
 

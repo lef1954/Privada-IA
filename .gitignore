@@ -1,0 +1,6 @@
+# Salidas de render: se regeneran con primer-video/05-render-animatico.py
+# y con primer-video/03-ensamblar.sh. No se versionan.
+primer-video/salida/
+*.mp4
+*.mov
+*.wav
